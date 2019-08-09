@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="shiny.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <title>MHiC</title>
+
+</head>
+<style>
+    .ui-page, .ui-dialog {
+        background: transparent repeat scroll;
+    }
+    body {
+
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: 50% 50%;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 300;
+        height: 100%;
+        width: 100%;
+        min-width: 1280px; min-height: 720px;
+
+    }
+    output{
+        font-size: 20px;
+        text-align:center;
+    }
+    .heads{
+        width: 100%;
+        color: azure;
+        margin: 0;
+        padding: 10px;
+        font-size: 30px;
+
+    }
+
+</style>
+<body>
+
+<div data-role="header"   class="heads" data-theme="b" style="position: fixed;">
+
+    <h1 >MHiC:</h1>
+    <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left" style=" margin-top: 30px;" data-iconpos="notext">
+        <a href="#"  data-icon="bars" class="ui-btn ui-btn-icon-right ui-icon-home ui-btn-icon-notext" >home</a>
+        <a href="#menus" data-icon="gear" class="ui-btn ui-btn-icon-right ui-icon-gear ui-btn-icon-notext" >menu</a>
+        <a href="#diagrams" data-rel="popup" data-transition="slideup" data-icon="bullets" class="ui-btn ui-btn-icon-right ui-icon-bullets " >Diagrams</a>
+
+    </div>
+</div>
+<div class="menus" id="menus" data-role="panel" data-position-fixed="true" data-display="overlay" data-theme="b">
+<div >
+
+    <div  class="option" style="width: 250px;  position: fixed; height: 100%; "  data-theme="b" data-role="content" >
+
+
+        <div id="accordion" style="padding-left: 10px;"  data-role="collapsible-set" data-inset="false" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d">
+
+
+
+            <div class="gotopt" id="gotopt" data-role="collapsible" data-inset="false">
+                <h3>Set MHiC options:</h3>
+
+                <label for="Itypee">Interaction type:</label>
+                <select name="Itypee" id="Itypee">
+                    <option value="all">ALL</option>
+                    <option value="cis">cis</option>
+                    <option value="trans">trans</option>
+                </select>
+                <label for="Bin">Bin Size:</label>
+                <input data-clear-btn="true" name="Bin" id="Bin" value="1000000" type="number">
+
+                <a href="#more"  data-rel="popup" data-transition="slideup" data-icon="back" class="ui-btn" >more option</a>
+
+
+
+                <label for="cores">Parallel mode cores number:</label>
+                <input data-clear-btn="true" name="cores" id="cores" value="1"  type="number">
+
+            </div>
+
+            <div class="normopt" id="normopt" data-role="collapsible" data-inset="false" style="display: none">
+                <h3>Set MHiC options:</h3>
+
+
+                <label for="Itypee1">Interaction type:</label>
+                <select name="Itypee1" id="Itypee1">
+                    <option value="cis">cis</option>
+                    <option value="trans">trans</option>
+                </select>
+                <label for="Bin1">Bin Size:</label>
+                <input data-clear-btn="true" name="Bin1" id="Bin1" value="1000000" type="number">
+
+                <a href="#more1"  data-rel="popup" data-transition="slideup" data-icon="back" class="ui-btn" >more option</a>
+
+                <label for="RemoveDiagonal1"><em>Remove Diagonal Interaction</em></label>
+                <select name="RemoveDiagonal1" id="RemoveDiagonal1" data-mini="true">
+                    <option value="TRUE">yes</option>
+                    <option value="FALSE">no</option>
+                </select>
+
+
+            </div>
+            <div class="fitopt" id="fitopt" data-role="collapsible" data-inset="false" style="display: none">
+                <h3>Set MHiC options:</h3>
+
+                <label for="biasfile">Bias File:</label>
+                <input  data-clear-btn="true"name="biasfile" id="biasfile" value="" type="text">
+
+                <label for="passes">Number of passes:</label>
+                <input data-clear-btn="true" name="passes" id="passes" value="1" type="number">
+
+                <label for="Bins1">Number of Bins:</label>
+                <input data-clear-btn="true" name="Bins1" id="Bins1" value="100" type="number">
+                <label for="mappability">Minimum mappability:</label>
+                <input data-clear-btn="true" name="mappability" id="mappability" value="1" type="number">
+                <a href="#more2"  data-rel="popup" data-transition="slideup" data-icon="back" class="ui-btn" >more option</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div data-role="popup" id="more" data-theme="b">
+
+    <label for="Parallel">Parallel mode</label>
+    <select name="Parallel" id="Parallel" data-mini="true">
+        <option value="FALSE">no</option>
+        <option value="TRUE">yes</option>
+    </select>
+    <label for="RemoveDiagonal"><em>Remove Diagonal Interaction</em></label>
+    <select name="RemoveDiagonal" id="RemoveDiagonal" data-mini="true">
+        <option value="TRUE">yes</option>
+        <option value="FALSE">no</option>
+    </select>
+    <label for="RemoveInteraction">Remove Invalid Interaction</label>
+    <select name="RemoveInteraction" id="RemoveInteraction"data-mini="true">
+        <option value="FALSE">no</option>
+        <option value="TRUE">yes</option>
+
+    </select>
+</div>
+
+
+    <div data-role="popup" id="more1" data-theme="b">
+
+        <label for="mcoverage">Minimum coverage:</label>
+        <input data-clear-btn="true" name="mcoverage" id="mcoverage" value="2" type="number">
+
+        <label for="mlength">Minimum effective fragment length:</label>
+        <input data-clear-btn="true" name="mlength" id="mlength" value="0.1" type="number">
+
+        <label for="mgc">Minimum gc content :</label>
+        <input data-clear-btn="true" name="mgc" id="mgc" value="0.3" type="number">
+
+        <label for="mmap">Minimum mappability:</label>
+        <input data-clear-btn="true" name="mmap" id="mmap" value="0.8" type="number">
+    </div>
+
+
+    <div data-role="popup" id="more2" data-theme="b">
+        <label for="Upper">Upper bound on the intra-chromosomal distance range:</label>
+        <input data-clear-btn="true" name="Upper" id="Upper" value="-1" type="number">
+        <label for="Lower">Lower bound on the intra-chromosomal distance range:</label>
+        <input data-clear-btn="true" name="Lower" id="Lower" value="-1" type="number">
+
+
+        <label for="Plots">Plots:</label>
+        <select name="Plots" id="Plots" data-mini="false">
+            <option value="FALSE">no</option>
+            <option value="TRUE">yes</option>
+        </select>
+    </div>
+
+</div>
+
+
+<div class="main" data-role="fieldcontain" data-inset="false" style="width: 90%; display: block;margin-left: 5%; margin-top: 120px;  position: fixed; ">
+
+
+<h3>Import input data:</h3>
+
+<label for="Input">Hi-C Input File:</label>
+<input  data-clear-btn="true"name="Input" id="Input" value="" type="text">
+<label for="Digest">Hi-C Digest File:</label>
+<input data-clear-btn="true" name="Digest" id="Digest" value="" type="text">
+<label for="Name">Sample Name:</label>
+<input data-clear-btn="true" name="Name" id="Name" value="" type="text">
+<label for="Method">Method:</label>
+
+    <select name="Method" id="Method" onchange="Met()">
+    <option id="Method1" value="gothic">GOTHiC</option>
+    <option id="Method2" value="hicnorm">HiCNorm</option>
+    <option id="Method3" value="fithic">Fit-Hi-c</option>
+    </select>
+
+    <label for="Tools">Tool name:</label>
+    <select name="Tools" id="Tools">
+        <option id="Tools1" value="MHiC">MHiC</option>
+        <option id="Tools2" value="HiCUP">HiCUP</option>
+        <option id="Tools3" value="HiC_PRO">HiC_PRO</option>
+        <option id="Tools4" value="HOMER">HOMER</option>
+        <option id="Tools5" style="display: none" value="HiCNorm">HiCNorm</option>
+    </select>
+    <div>
+        {{ button }}
+    </div>
+    <output name="state" id="state"  value="" type="text" class="shiny-text-output shiny-bound-output"  style=" margin-left: 40%; margin-top: 80px; font-size: 60px;"></output>
+</div>
+
+<div data-role="popup" id="diagrams" data-theme="b">
+    <a href="arc.html" target="_blank" data-icon="plus" class="ui-btn ui-btn-icon-plus ui-icon-home " >ARC Diagram</a>
+    <a href="Heatmap.html" target="_blank" data-icon="plus" class="ui-btn ui-btn-icon-plus ui-icon-home " >Heatmap Diagram</a>
+</div>
+</body>
+
+</html>
+
+<script  src="Arc.js"></script>
+<script  src="diagram.js"></script>
+<script type="application/javascript;version=1.7"></script>
+<script >
+    function Met(){
+
+        if($("#Method").val() == "hicnorm" ){
+            $("#gotopt").hide();
+            $("#normopt").show();
+            $("#fitopt").hide();
+
+            $("#Tools1").hide();
+            $("#Tools2").hide();
+            $("#Tools3").hide();
+            $("#Tools4").hide();
+            $("#Tools5").show();
+        }
+         else if($("#Method").val() == "gothic" ){
+            $("#gotopt").show();
+            $("#normopt").hide();
+            $("#fitopt").hide();
+
+            $("#Tools1").show();
+            $("#Tools2").show();
+            $("#Tools3").show();
+            $("#Tools4").show();
+            $("#Tools5").hide();
+        }
+        else if($("#Method").val() == "fithic" ){
+            $("#gotopt").hide();
+            $("#normopt").hide();
+            $("#fitopt").show();
+
+            $("#Tools1").hide();
+            $("#Tools2").show();
+            $("#Tools3").show();
+            $("#Tools4").hide();
+            $("#Tools5").hide();
+        }
+    }
+
+</script>

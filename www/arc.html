@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!-- Port Arc Diagram visualization from http://homes.cs.washington.edu/~jheer/files/zoo/ex/networks/arc.html to D3.js -->
+<meta charset="utf-8">
+<html>
+<head>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="d3.js"></script>
+    <script  src="papaparse.js"></script>
+    <script  src="d3-save-svg.min.js"></script>
+    <script  src="saveSvgAsPng.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <title>Arc diagram for Hi-C data</title>
+
+</head>
+<style>
+    body {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 300;
+        height: auto;
+        width: auto;
+
+        }
+    .head{
+        width: 100%;
+        color: azure;
+        margin: 0;
+        padding: 10px;
+        font-size: 30px;
+
+    }
+    b {
+        font-weight: 900;
+    }
+   .menu{
+        position: fixed;
+       width: 250px;
+       float: left;
+       display: block;
+       padding: 0px 20px;
+
+   }
+   #button2{
+       width: 100%;
+       padding: 10px 0px;
+       background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+       font-size: 30px;
+   }
+
+
+   .outline {
+        fill: none;
+        stroke: #888888;
+        stroke-width: 1px;
+    }
+    #slider {
+        width: 100%;
+
+    }
+    .ui-slider .ui-btn-inner {
+        padding: 4px 0 0 0 !important;
+    }
+
+    .ui-slider-popup {
+        position: absolute !important;
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        font-size: 28px;
+        padding-top: 14px;
+        z-index: 100;
+        opacity: 0.8;
+    }
+    #tooltip {
+        font-size: 10pt;
+        font-weight: 900;
+
+        fill: #000000;
+        stroke: #ffffff;
+        stroke-width: 0.25px;
+        -webkit-user-select: none;  /* Chrome all / Safari all */
+        -moz-user-select: none;     /* Firefox all */
+        -ms-user-select: none;      /* IE 10+ */
+        user-select: none;
+    }
+    #tooltip1 {
+        font-size: 10pt;
+        font-weight: 900;
+
+        fill: #000000;
+        stroke: #ffffff;
+        stroke-width: 0.25px;
+        -webkit-user-select: none;  /* Chrome all / Safari all */
+        -moz-user-select: none;     /* Firefox all */
+        -ms-user-select: none;      /* IE 10+ */
+        user-select: none;
+    }
+    .nodeid {
+        font-size: 6pt;
+        font-weight: 800;
+    }
+
+    .node {
+        stroke: #ffffff;
+        stroke-weight: 1px;
+    }
+
+    .link {
+        fill: none;
+        stroke: #888888;
+        stroke-weight: 1px;
+        stroke-opacity: 0.5;
+    }
+
+    .highlight {
+        stroke: red;
+        stroke-weight: 4px;
+        stroke-opacity: 1.0;
+    }
+
+</style>
+
+<body >
+<div data-role="header"  class="head" data-theme="b">
+
+    <h1 >Arc diagram :</h1>
+    <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left" style=" margin-top: 30px;" data-iconpos="notext">
+        <a href="MHiC.html" target="_blank" data-icon="bars" class="ui-btn ui-btn-icon-right ui-icon-home ui-btn-icon-notext" >home</a>
+        <a href="#menu" data-icon="bars" class="ui-btn ui-btn-icon-right ui-icon-bars ui-btn-icon-notext" >menu</a>
+        <a href="#"  onclick="resets()" data-icon="refresh" class="ui-btn ui-btn-icon-right ui-icon-refresh ui-btn-icon-notext" >Reset</a>
+        <a href="#"  onclick="remov()" data-icon="back" class="ui-btn ui-btn-icon-right ui-icon-delete ui-btn-icon-notext" >Remove</a>
+        <a href="#saves1"  data-rel="popup" data-transition="slideup" data-icon="back" class="ui-btn ui-btn-icon-right ui-icon-arrow-d ui-btn-icon-notext" >Save diagram</a>
+        <a href="#color"  data-rel="popup" data-transition="slideup" data-icon="back" class="ui-btn ui-btn-icon-right ui-icon-edit ui-btn-icon-notext" >Set color</a>
+        <a href="Heatmap.html" target="_blank" data-icon="plus" class="ui-btn ui-btn-icon-plus ui-icon-home " >Heatmap Diagram</a>
+    </div>
+</div>
+<div >
+
+<div class="menu" id="menu" data-role="panel" data-position-fixed="true" data-display="overlay" data-theme="b">
+<div id="accordion" data-role="collapsible-set" data-inset="false" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d">
+
+<div data-role="collapsible" data-inset="false">
+    <h3>Import data:</h3>
+    <input type="file" id="myFile" multiple size="50" onchange="readFile()" style="width: 100%;">
+    <div class="ui-field-contain">
+        <select  onchange="chr()" name="select-chr" id="select-chr" style="width: 100%;padding: 10px 0px;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));">
+        </select>
+    </div>
+</div>
+
+<div data-role="collapsible" data-inset="false">
+    <h3>Set read counts value:</h3>
+    <label for="reads">Set reads count value:</label>
+    <input id="reads" name="value" type="number" value="0"  style="width: 100%;">
+    <button type="button" id="button4" onclick="readcounts()" style="width: 100%;padding: 10px 0px;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));font-size: 20px;">Set read count</button>
+    <button type="button" id="button5" onclick="readcountscolor()" style="width: 100%;padding: 10px 0px;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));font-size: 20px;">change color</button>
+</div>
+
+<div data-role="collapsible" data-inset="false">
+    <h3>Select Arc range:</h3>
+    <button  type="button" id="button6" onclick="selectzoom()" style="width: 100%;padding: 10px 0px;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));font-size: 20px;">Arc range</button>
+</div>
+
+<div data-role="collapsible" data-inset="false">
+    <h3>Set nodes distance:</h3>
+    <label for="bin">Set nodes distance:</label>
+    <input id="bin" name="value" type="number" value="0"  style="width: 100%;">
+    <button type="button" id="button9" onclick="bin()" style="width: 100%;padding: 10px 0px;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));font-size: 20px;">Set distance</button>
+</div>
+
+
+    <div data-role="collapsible" data-inset="false">
+        <h3>Add Annotation:</h3>
+        <label for="prometer">Add promoter:</label>
+        <input type="file" id="prometer" multiple size="50" onchange="readprometer()" style="width: 100%;">
+        <label for="enhancer">Add enhancer:</label>
+        <input type="file" id="enhancer" multiple size="50" onchange="readenhancer()" style="width: 100%;">
+
+
+    </div>
+</div>
+
+</div>
+<div data-role="rangeslider" id="slider" data-track-theme="b" data-theme="b"style="display: block; width: 90%;  min-width:1000px; margin-left: 50px; " >
+    <input name="range-1b" min="0" max="0" value="0" id="rslider-1a" type="range" data-popup-enabled="true" data-show-value="false" onchange="range()" />
+    <input name="range-1b" min="0" max="0" value="0" id="rslider-1b" type="range" data-popup-enabled="true" data-show-value="false" onchange="range()" />
+</div>
+
+<div id="diagram" style="display: block;  position: absolute; width: 80%; height:75%;    overflow-y: scroll; overflow-x:scroll;  margin-left: 120px;margin-up: 20px; "></div>
+</div>
+
+
+<div   data-role="popup" id="saves1"  data-theme="b">
+    <ul data-role="listview" data-inset="true" style="min-width:210px;">
+        <li data-role="list-divider">Save Diagram:</li>
+        <li>
+
+            <a  href="#" onclick="saves(1)" id="savesvg" >SVG</a></li>
+        <li>
+
+            <a  href="#" onclick="saves(0)" id="savepng" >PNG</a></li>
+    </ul>
+</div>
+
+<div data-role="popup" id="color" data-theme="b">
+    <ul data-role="listview" data-inset="true" style="min-width:210px;">
+        <li data-role="list-divider">set colors:</li>
+        <li>
+            <label for="nodecolor">Nodes</label>
+            <input onchange="nodescolor()" type="color" id="nodecolor"  value='#FFA500' ></li>
+        <li>
+            <label for="interactioncolor">Interactions</label>
+            <input onchange="interactcolor()" type="color" id="interactioncolor"  value='#000000'></li>
+        <li>
+            <label for="selectcolor">Selected Object</label>
+            <input onchange="selectcolor()" type="color" id="selectcolor"  value='#ff0000'></li>
+        <li>
+            <label for="annotationcolor">Annotation</label>
+            <input onchange="annotationcolor()" type="color" id="annotationcolor"  value='#00FF00'></li>
+    </ul>
+</div>
+
+</body>
+</html>
+
+<script  src="Arc.js"></script>
+<script  src="diagram.js"></script>
+<script  src="options.js"></script>
+<script type="application/javascript;version=1.7"></script>
+
+
