@@ -12,7 +12,8 @@ In order to have an integrated tool, we developed a Graphical User Interface for
 #### 2.	User Guide
 We explain this section in two parts:
 ##### 2.1.	User Interface
-We developed this user interface to provide an easier way for users’ operations with the analytical section of the tool. This page receives data and its options from users and sends it to analytical section. In other words, we use the main section as a local server. 
+We developed this user interface to provide an easier way for users’ operations with the analytical section of the tool. This page receives data and its options from users and sends it to analytical section. In other words, we use the main section as a local server.  
+![](https://github.com/MHi-C/MHiCUI/blob/master/image/s1.png)  
 This HTML page contains two types of elements. In the center, we implemented the import data section to receive data from users and process it in R functions. This section includes: 
   
 **“Hi-C Input File”**: Path of a file that contains the reads (interactions) information. This also noticeable that instead of the file path user can set file name as input, if data located in MHiC’s data direction.  
@@ -24,7 +25,8 @@ This HTML page contains two types of elements. In the center, we implemented the
 **“Method”**: In this part, users select the method used for Hi-C data analysis.  
   
 **“Tool Name”**: Defines the preparing process used on Hi-C data.  
-
+![](https://github.com/MHi-C/MHiCUI/blob/master/image/s2.png)  
+  
 Along the import data section, we develop an options section on the left side to change the main process parameters. The option part contains six elements:  
   
 **“Interactions type”**: Specify that the R package process work on witch type of interactions (inter or intra interactions).  
@@ -42,12 +44,14 @@ Along the import data section, we develop an options section on the left side to
 In MHiC, we develop a visualization section. This section implemented as HTML pages to show Hi-C interaction as Heatmap diagram or Arc diagram.
 - **Arc Diagram**  
 Arc Diagram only works on cis interactions and use circular nodes to show Locus positions, and for each interaction, this diagram draws an Arc link between two nodes. In this diagram, the number of interacting reads between two regions impacts on Arc link Thickness. In this diagram, we provide some options to create more accurate diagrams . Also, users can change some options such as node and link colors. 
-Also, users can select a particular node (locus position) or link (interaction between two regions) to show pieces of information about that locus or interaction.
-
+![](https://github.com/MHi-C/MHiCUI/blob/master/image/s3.png)  
+Also, users can select a particular node (locus position) or link (interaction between two regions) to show pieces of information about that locus or interaction.  
+![](https://github.com/MHi-C/MHiCUI/blob/master/image/s4.png)  
   The other option that we provided is zoom in. this options allow users to show interactions and locus between two particular positions. In other words, users can zoom in and show limited regions. 
-
-  Along with the zoom in, we developed an option to set read counts and visualize Hi-C interactions that only have more read counts than the option value.
-
+![](https://github.com/MHi-C/MHiCUI/blob/master/image/s5.png)  
+  Along with the zoom in, we developed an option to set read counts and visualize Hi-C interactions that only have more read counts than the option value.  
+![](https://github.com/MHi-C/MHiCUI/blob/master/image/s6.png)  
   The other main element is the annotation files’ visualization. In this part, users can import different annotation files to show on top of the Arc diagram. 
 - **Contact map diagram**  
-Contact map diagram draws a Heatmap of interactions. The Heatmap can show interactions within a single chromosome or multiple chromosomes. As well as Arc Diagram, users can import different annotation files to show on top of the Arc diagram. Also, users can set read counts, so interactions that have more read counts value visualizes in red or aother color that user selects. 
+Contact map diagram draws a Heatmap of interactions. The Heatmap can show interactions within a single chromosome or multiple chromosomes. As well as Arc Diagram, users can import different annotation files to show on top of the Arc diagram. Also, users can set read counts, so interactions that have more read counts value visualizes in red or aother color that user selects.  
+![](https://github.com/MHi-C/MHiCUI/blob/master/image/s7.png)  
